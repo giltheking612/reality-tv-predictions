@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Skill(claude-api)",
+      "Bash(npm install *)",
+      "Bash(npx tsx *)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}
