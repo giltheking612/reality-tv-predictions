@@ -4,8 +4,10 @@ import { getLockedEpisodesWithUnresolvedQuestions, submitResult, voidQuestion, l
 
 const client = new Anthropic()
 
-export async function runResultSubmitter() {
-  const episodes = await getLockedEpisodesWithUnresolvedQuestions()
+export async function runResultSubmitter(episodes?: any[]) {
+  if (!episodes) {
+    episodes = await getLockedEpisodesWithUnresolvedQuestions()
+  }
 
   if (episodes.length === 0) {
     console.log('[ResultSubmitter] No locked episodes with unresolved questions.')

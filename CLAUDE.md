@@ -11,6 +11,7 @@ Read the corresponding file and follow it exactly:
 - **Session 3** → read `SESSION_3.md` (Backend API & Scoring — requires Session 1 to be done)
 - **Session 4** → read `SESSION_4.md` (Integration & Testing — requires Sessions 1-3 done)
 - **Session 5** → read `SESSION_5.md` (AI Admin Agent with Claude API — requires Sessions 1-4 done)
+- **Session 6** → read `SESSION_6.md` (Add 5 more shows + per-show agent — requires Session 5 done)
 
 ## Full system specification:
 

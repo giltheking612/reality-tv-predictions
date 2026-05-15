@@ -104,26 +104,25 @@ export const tools: Anthropic.Tool[] = [
 ]
 
 export async function executeWebSearch(query: string): Promise<string> {
-  const apiKey = process.env.BRAVE_API_KEY
+  const apiKey = process.env.SERPAPI_KEY
 
   if (!apiKey) {
-    return `[Web search not configured - no BRAVE_API_KEY. Query was: "${query}"]`
+    return `[Web search not configured - no SERPAPI_KEY. Query was: "${query}"]`
   }
 
   const res = await fetch(
-    `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=5&search_lang=he`,
-    { headers: { 'Accept': 'application/json', 'X-Subscription-Token': apiKey } }
+    `https://serpapi.com/search.json?q=${encodeURIComponent(query)}&hl=he&gl=il&api_key=${apiKey}&num=5`
   )
 
   if (!res.ok) return `Search failed: ${res.statusText}`
 
   const data = await res.json()
-  const results = data.web?.results ?? []
+  const results = data.organic_results ?? []
 
   return results
     .slice(0, 5)
-    .map((r: { title: string; description: string; url: string }) =>
-      `Title: ${r.title}\nSummary: ${r.description}\nURL: ${r.url}`
+    .map((r: { title: string; snippet: string; link: string }) =>
+      `Title: ${r.title}\nSummary: ${r.snippet}\nURL: ${r.link}`
     )
     .join('\n\n')
 }

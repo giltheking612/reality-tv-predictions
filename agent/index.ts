@@ -14,7 +14,15 @@ async function main() {
     throw new Error('ADMIN_SECRET is required')
   }
 
-  await runScheduler()
+  const showSlug = process.argv[2] ?? null
+
+  if (showSlug) {
+    console.log(`[Agent] Running for show: ${showSlug}`)
+  } else {
+    console.log('[Agent] Running for all active shows')
+  }
+
+  await runScheduler(showSlug)
 }
 
 main().catch(err => {
