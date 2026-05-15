@@ -14,15 +14,18 @@ async function main() {
     throw new Error('ADMIN_SECRET is required')
   }
 
-  const showSlug = process.argv[2] ?? null
+  // Usage:
+  //   npm start                    → daily, all shows
+  //   npm start weekly             → weekly, all shows
+  //   npm start hahamikdash        → daily, specific show
+  //   npm start weekly hahamikdash → weekly, specific show
+  const isWeekly = process.argv[2] === 'weekly'
+  const mode = isWeekly ? 'weekly' : 'daily'
+  const showSlug = isWeekly ? (process.argv[3] ?? null) : (process.argv[2] ?? null)
 
-  if (showSlug) {
-    console.log(`[Agent] Running for show: ${showSlug}`)
-  } else {
-    console.log('[Agent] Running for all active shows')
-  }
+  console.log(`[Agent] Mode: ${mode}${showSlug ? `, show: ${showSlug}` : ', all shows'}`)
 
-  await runScheduler(showSlug)
+  await runScheduler(showSlug, mode)
 }
 
 main().catch(err => {

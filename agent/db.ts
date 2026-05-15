@@ -15,6 +15,32 @@ export async function getActiveSeasons() {
   return data
 }
 
+export async function getShowsWithoutActiveSeason() {
+  const { data: allShows, error: showsError } = await db.from('shows').select('*')
+  if (showsError) throw showsError
+
+  const { data: activeSeasons, error: seasonsError } = await db
+    .from('seasons')
+    .select('show_id')
+    .eq('status', 'active')
+  if (seasonsError) throw seasonsError
+
+  const activeShowIds = new Set((activeSeasons ?? []).map((s: any) => s.show_id))
+  return (allShows ?? []).filter((show: any) => !activeShowIds.has(show.id))
+}
+
+export async function createSeason(season: {
+  show_id: string
+  number: number
+  name_he: string
+  status?: string
+  start_date?: string
+}) {
+  const { data, error } = await db.from('seasons').insert(season).select().single()
+  if (error) throw error
+  return data
+}
+
 export async function getUpcomingEpisodes(seasonId: string) {
   const { data, error } = await db
     .from('episodes')

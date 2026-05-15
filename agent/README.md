@@ -26,7 +26,7 @@ npm start
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase project settings → API → service_role key |
 | `ADMIN_SECRET` | Same value as in the main app's `.env.local` |
 | `NEXT_PUBLIC_APP_URL` | Deployed Vercel URL (or `http://localhost:3000` for local dev) |
-| `BRAVE_API_KEY` | [brave.com/search/api](https://brave.com/search/api) — free tier (2,000 queries/month) is enough |
+| `SERPAPI_KEY` | [serpapi.com](https://serpapi.com) — free tier (100 searches/month) is enough for development |
 
 ## How to run on a schedule
 
