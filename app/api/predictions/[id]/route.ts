@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { adminClient } from '@/lib/supabase/admin'
 
 export async function PUT(
   request: NextRequest,
@@ -93,9 +94,9 @@ export async function DELETE(
   const { error: deleteError } = await supabase.from('predictions').delete().eq('id', id)
   if (deleteError) return NextResponse.json({ error: deleteError.message }, { status: 500 })
 
-  // Refund fee to wallet
+  // Refund fee to wallet (admin client bypasses RLS)
   const seasonId = question.episode.season_id
-  const { data: wallet } = await supabase
+  const { data: wallet } = await adminClient
     .from('season_wallets')
     .select('balance')
     .eq('user_id', user.id)
@@ -103,7 +104,7 @@ export async function DELETE(
     .single()
 
   if (wallet) {
-    await supabase
+    await adminClient
       .from('season_wallets')
       .update({ balance: wallet.balance + prediction.fee_paid })
       .eq('user_id', user.id)

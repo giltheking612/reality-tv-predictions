@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { adminClient } from '@/lib/supabase/admin'
 
 export async function POST(
   request: NextRequest,
@@ -39,13 +40,13 @@ export async function POST(
 
   const seasonId = episode.season_id
 
-  // Get or create wallet with starting balance of 1000
-  await supabase.from('season_wallets').upsert(
+  // Get or create wallet with starting balance of 1000 (uses admin client to bypass RLS)
+  await adminClient.from('season_wallets').upsert(
     { user_id: user.id, season_id: seasonId, balance: 1000 },
     { onConflict: 'user_id,season_id', ignoreDuplicates: true }
   )
 
-  const { data: wallet, error: walletError } = await supabase
+  const { data: wallet, error: walletError } = await adminClient
     .from('season_wallets')
     .select('balance')
     .eq('user_id', user.id)
@@ -69,7 +70,7 @@ export async function POST(
       return NextResponse.json({ error: 'insufficient_balance' }, { status: 422 })
     }
 
-    const { error: deductError } = await supabase
+    const { error: deductError } = await adminClient
       .from('season_wallets')
       .update({ balance: wallet.balance - question.entry_fee })
       .eq('user_id', user.id)
